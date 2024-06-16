@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      .form-container h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333333;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555555;
+      }
+      .form-group input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+      }
+      .form-group input:focus {
+        border-color: #007bff;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Edit Profile</h2>
+      <form id="editform">
+        <div class="form-group">
+          <label for="name">Name: <span id="name_space"></span> </label>
+          <input type="text" id="name" name="name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email: <span id="email_space"></span></label>
+          <input type="text" id="email" name="email" />
+        </div>
+        <div class="form-group">
+          <label for="interest"
+            >Interest: <span id="interest_space"></span
+          ></label>
+          <input type="text" id="interest" name="interest" />
+        </div>
+        <button class="btn">Edit Profile</button>
+      </form>
+    </div>
+    <script>
+      var editform = document.querySelector("#editform");
+      editform.addEventListener("submit", (e) => {
+        e.preventDefault();
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var interest = document.getElementById("interest").value;
+        const data = { userId: 1, name, email, interest };
+
+        fetch("/handleForm", {
+          method: "PUT",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("interest").value = "";
+          });
+      });
+      fetch("/getData")
+        .then((response) => response.json())
+        .then((json) => {
+          const { name, email, interest } = json;
+          document.getElementById("name_space").innerText = name;
+          document.getElementById("email_space").innerText = email;
+          document.getElementById("interest_space").innerText = interest;
+        });
+    </script>
+  </body>
+</html>
